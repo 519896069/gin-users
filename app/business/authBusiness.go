@@ -32,7 +32,7 @@ func Login(params params.Login) gin.H {
 }
 
 func Register(params params.Register) gin.H {
-	user := models.User{}
+	user := models.GetUserModel()
 	query := user.Db.Where("email=?", params.Email).First(&user)
 	if query.Error == nil {
 		panic("邮箱已存在")
@@ -40,20 +40,18 @@ func Register(params params.Register) gin.H {
 	//验证
 	//验证成功
 	salt := lib.Md5(lib.Uuid())
-	user = models.User{
-		Username: params.Username,
-		Email:    params.Email,
-		Password: models.EncryptPassword(params.Password, salt),
-		Salt:     salt,
-	}
-	tx := lib.Mysql.Db.Create(&user)
+	user.Username = params.Username
+	user.Email = params.Email
+	user.Password = models.EncryptPassword(params.Password, salt)
+	user.Salt = salt
+	tx := user.Db.Create(&user)
 	if tx.Error != nil {
 		fmt.Println(tx.Error.Error())
 		panic("用户创建失败，联系肥肥~")
 	}
 
 	return gin.H{
-		"token": models.GetTokenModel().LoginSuccess(&user),
+		"token": models.GetTokenModel().LoginSuccess(user),
 		"user": gin.H{
 			"id":       user.ID,
 			"username": user.Username,

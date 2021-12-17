@@ -6,11 +6,11 @@ import (
 )
 
 func Auth(ctx *gin.Context) {
-	token := ctx.Query("token")
+	token := ctx.GetHeader("Authorization")
 	if token == "" {
-		panic("token is required")
+		panic("登录信息失效，请重新登录~")
 	} else {
-		if !checkToken(token) {
+		if !checkToken(token[7:]) {
 			panic("请先登录")
 		} else {
 			ctx.Next()

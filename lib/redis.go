@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"time"
@@ -44,4 +45,45 @@ func init() {
 			},
 		},
 	}
+}
+
+func (r RedisConnect) Get(key string) ([]byte, bool) {
+	conn := r.Pool.Get()
+	defer conn.Close()
+	reply, err := conn.Do("get", key)
+	if err != nil {
+		return []byte{}, false
+	}
+	return reply.([]byte), true
+}
+
+func (r RedisConnect) Set(key string, value interface{}) bool {
+	valueType := fmt.Sprintf("%T", value)
+	if valueType != "string" && valueType != "[]byte" {
+		valueByte, err := json.Marshal(value)
+		if err != nil {
+			return false
+		}
+		value = string(valueByte)
+	}
+	conn := r.Pool.Get()
+	defer conn.Close()
+	_, err := conn.Do("set", key, value)
+	return err == nil
+}
+
+func (r RedisConnect) Expired(key string, second int) bool {
+	conn := r.Pool.Get()
+	defer conn.Close()
+	_, err := conn.Do("expire", key, second)
+	return err == nil
+}
+
+func (r RedisConnect) Setex(key string, value interface{}, second int) bool {
+	ok := r.Set(key, value)
+	if !ok {
+		return ok
+	}
+	ok = r.Expired(key, second)
+	return ok
 }

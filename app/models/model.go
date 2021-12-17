@@ -11,5 +11,5 @@ type Model struct {
 	CreatedAt time.Time      `json:"-"`
 	UpdatedAt time.Time      `json:"-"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-	Db        *gorm.DB		 `gorm:"-"`
+	Db        *gorm.DB       `gorm:"-" json:"-"`
 }

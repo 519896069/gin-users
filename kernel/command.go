@@ -7,7 +7,8 @@ import (
 type CommandHandler func(args ...string)
 
 var Commands = map[string]CommandHandler{
-	"test" : commands.Test,
+	"test":      commands.Test,
+	"migration": commands.Migration,
 }
 
 func getCommand(cmd string) CommandHandler {
