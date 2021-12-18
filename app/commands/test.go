@@ -3,6 +3,7 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 	"user/lib"
 )
 
@@ -12,20 +13,29 @@ type test struct {
 	D  []int  `json:"d"`
 }
 
-func Test(args ...string) {
-	//ok := lib.Redis.Set("test", map[string]interface{}{
-	//	"ab": "b",
-	//	"c":  "b",
-	//	"d":  []int{1, 2, 3, 4, 5},
-	//})
-	re, ok := lib.Redis.Get("test")
-	if ok {
-		r := test{}
-		json.Unmarshal(re, &r)
-		fmt.Printf("%T,%s\n", r, r)
-		fmt.Printf("%T,%v\n", r.D[:1], r.D)
-		fmt.Printf("%T,%v\n", []int{1, 2, 3}[2], [3]int{1, 2, 3})
-	} else {
-		fmt.Println("err")
+func testList(index int) {
+	time.Sleep(time.Duration(index) * time.Second)
+	t := test{
+		Ab: "ab",
+		C:  "c",
+		D:  []int{},
 	}
+	t.D = append(t.D, index)
+	marshal, _ := json.Marshal(t)
+	lib.Redis.Lpush("tlist", string(marshal))
+	t = test{}
+	fmt.Printf("push:%d\n", index)
+}
+
+func Test(args ...string) {
+	t := test{
+		Ab: "ab",
+		C:  "c",
+		D:  []int{1, 2, 3},
+	}
+	marshal, _ := json.Marshal(t)
+	lib.Redis.Lpush("tlist", string(marshal))
+	t = test{}
+	lib.Redis.Rpop("tlist", &t)
+	fmt.Println(t)
 }
