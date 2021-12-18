@@ -32,13 +32,8 @@ func (t Token) GetUserByToken(tokenStr string) *User {
 		cache = true
 	)
 	//先从缓存中获取UID
-	tokenJsonStr, ok := lib.Redis.Get(tokenStr)
+	_, ok := lib.Redis.Get(tokenStr, &t)
 	if !ok {
-		cache = false
-	}
-	//解析缓存中的数据
-	err := json.Unmarshal(tokenJsonStr, &t)
-	if err != nil {
 		cache = false
 	}
 	if t.Expired.Unix() < time.Now().Unix() {
@@ -86,7 +81,7 @@ func (t Token) LoginSuccess(user *User) string {
 	//把token加入缓存
 	json, err := json.Marshal(t)
 	if err == nil {
-		lib.Redis.Set(token, json)
+		lib.Redis.Set(token, string(json), 3600*30*6)
 	} else {
 		panic(fmt.Sprintf("%.v", err))
 	}
@@ -95,8 +90,6 @@ func (t Token) LoginSuccess(user *User) string {
 }
 
 func (t *Token) setExpired() {
-	conn := lib.Redis.Pool.Get()
-	defer conn.Close()
-	conn.Do("HDEL", "user_token", t.Token)
+	lib.Redis.Expired(t.Token, 0)
 	t.Db.Unscoped().Delete(&t)
 }
