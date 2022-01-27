@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
-	"user/lib"
+	"user/lib/logger"
 )
 
 type WriterInterceptor struct {
@@ -47,7 +47,7 @@ func Logger(c *gin.Context) {
 	// 执行时间
 	latencyTime := endTime.Sub(startTime).String()
 	// 返回日志
-	lib.Logger(c).Info(logrus.Fields{
+	logger.Logger(c).Info(logrus.Fields{
 		"uri":         reqUri,
 		"statusCode":  statusCode,
 		"latencyTime": latencyTime,

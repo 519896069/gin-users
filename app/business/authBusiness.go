@@ -6,6 +6,7 @@ import (
 	"user/app/http/params"
 	"user/app/models"
 	"user/lib"
+	"user/lib/mysql"
 )
 
 func Login(params params.Login) gin.H {
@@ -65,8 +66,17 @@ func ChangePassword(params params.ChangePassword) {
 	salt := lib.Uuid()
 	models.AuthUser.Salt = salt
 	models.AuthUser.Password = models.EncryptPassword(params.Password, salt)
-	tx := lib.Mysql.Db.Updates(&models.AuthUser)
+	tx := mysql.Mysql.Db.Updates(&models.AuthUser)
 	if tx.Error != nil {
 		panic(tx.Error.Error())
 	}
+}
+
+func CheckToken(token string) bool {
+	user := models.GetTokenModel().GetUserByToken(token)
+	if user != nil {
+		models.AuthUser = user
+		return true
+	}
+	return false
 }

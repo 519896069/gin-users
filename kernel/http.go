@@ -2,7 +2,6 @@ package kernel
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -18,11 +17,6 @@ func StartHttp() {
 	engine.Static("/static", "./storage/static")
 	//初始化路由
 	routes.New(engine)
-	err := engine.Run(":8888")
-	if err != nil {
-		fmt.Println("http error")
-		return
-	}
 	server := &http.Server{
 		Addr:    ":8080",
 		Handler: engine,

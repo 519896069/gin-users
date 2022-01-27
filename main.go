@@ -12,7 +12,10 @@ func main() {
 	}
 	switch args[1] {
 	case "http":
+		kernel.StartRpc()
 		kernel.StartHttp()
+	case "rpc":
+		kernel.StartRpc()
 	default:
 		kernel.Exec(args[1:])
 	}

@@ -9,13 +9,14 @@ import (
 	"user/app/http/params"
 	"user/app/models"
 	"user/lib"
+	"user/lib/mysql"
 )
 
 func UpdateUserInfo(params params.UserInfo) *models.User {
 	models.AuthUser.Username = params.Username
 	models.AuthUser.Email = params.Email
 	models.AuthUser.Mobile = params.Mobile
-	lib.Mysql.Db.Updates(models.AuthUser)
+	mysql.Mysql.Db.Updates(models.AuthUser)
 	return models.AuthUser
 }
 
@@ -43,6 +44,6 @@ func UploadAvatar(ctx *gin.Context) string {
 		panic(fmt.Sprintf("%v", uploadErr))
 	}
 	models.AuthUser.Avatar = completePath
-	lib.Mysql.Db.Updates(models.AuthUser)
+	mysql.Mysql.Db.Updates(models.AuthUser)
 	return completePath
 }

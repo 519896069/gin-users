@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 	"user/lib"
+	"user/lib/mysql"
 )
 
 var (
@@ -24,7 +25,7 @@ type User struct {
 func GetUserModel() *User {
 	return &User{
 		Model: Model{
-			Db: lib.Mysql.Db,
+			Db: mysql.Mysql.Db,
 		},
 	}
 }
@@ -35,7 +36,7 @@ func (user *User) CheckPassword(password string) bool {
 
 func (user *User) GetToken() (*Token, bool) {
 	var token Token
-	tx := lib.Mysql.Db.Where("uid=?", user.ID).Where("expired>?", time.Now()).First(&token)
+	tx := mysql.Mysql.Db.Where("uid=?", user.ID).Where("expired>?", time.Now()).First(&token)
 	if tx.Error == nil {
 		return nil, false
 	}

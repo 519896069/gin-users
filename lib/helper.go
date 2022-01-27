@@ -4,12 +4,13 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"github.com/garyburd/redigo/redis"
+	redis2 "github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+	"user/lib/redis"
 )
 
 func Uuid() string {
@@ -20,16 +21,16 @@ func Uuid() string {
 
 func getId() int64 {
 	//获取redis连接
-	client := Redis.Pool.Get()
+	client := redis.Redis.Pool.Get()
 	defer client.Close()
 	//判断是否存在不存在则设置初始化1秒过期
-	exists, _ := redis.Bool(client.Do("exists", "uid_count"))
+	exists, _ := redis2.Bool(client.Do("exists", "uid_count"))
 	if !exists {
 		client.Do("set", "uid_count", "0")
 		client.Do("expire", "uid_count", "1")
 	}
 	//自增
-	value, err := redis.Int64(client.Do("INCRBY", "uid_count", "1"))
+	value, err := redis2.Int64(client.Do("INCRBY", "uid_count", "1"))
 	if err != nil {
 		panic("创建用户ID失败")
 	}

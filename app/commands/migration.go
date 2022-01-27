@@ -2,10 +2,10 @@ package commands
 
 import (
 	"user/app/models"
-	"user/lib"
+	"user/lib/mysql"
 )
 
 func Migration(args ...string) {
-	lib.Mysql.Db.AutoMigrate(&models.User{})
-	lib.Mysql.Db.AutoMigrate(&models.Token{})
+	mysql.Mysql.Db.AutoMigrate(&models.User{})
+	mysql.Mysql.Db.AutoMigrate(&models.Token{})
 }

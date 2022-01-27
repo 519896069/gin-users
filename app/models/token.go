@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 	"user/lib"
+	"user/lib/mysql"
+	"user/lib/redis"
 )
 
 type Token struct {
@@ -21,7 +23,7 @@ type Token struct {
 func GetTokenModel() *Token {
 	return &Token{
 		Model: Model{
-			Db: lib.Mysql.Db,
+			Db: mysql.Mysql.Db,
 		},
 	}
 }
@@ -32,7 +34,7 @@ func (t Token) GetUserByToken(tokenStr string) *User {
 		cache = true
 	)
 	//先从缓存中获取UID
-	_, ok := lib.Redis.Get(tokenStr, &t)
+	_, ok := redis.Redis.Get(tokenStr, &t)
 	if !ok {
 		cache = false
 	}
@@ -81,7 +83,7 @@ func (t Token) LoginSuccess(user *User) string {
 	//把token加入缓存
 	json, err := json.Marshal(t)
 	if err == nil {
-		lib.Redis.Set(token, string(json), 3600*30*6)
+		redis.Redis.Set(token, string(json), 3600*30*6)
 	} else {
 		panic(fmt.Sprintf("%.v", err))
 	}
@@ -90,6 +92,6 @@ func (t Token) LoginSuccess(user *User) string {
 }
 
 func (t *Token) setExpired() {
-	lib.Redis.Expired(t.Token, 0)
+	redis.Redis.Expired(t.Token, 0)
 	t.Db.Unscoped().Delete(&t)
 }

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "app/services";
+
+service UserServices {
+  //用token获取用户 - 用户鉴权
+  rpc GetUserByToken(Token) returns (User);
+}
+
+message User {
+  int64 id = 1;
+  string Username = 2;
+  string Avatar = 3;
+  string Email = 4;
+  string Mobile = 5;
+  int64 Status = 7;
+}
+
+message Token {
+  string Token = 1;
+}

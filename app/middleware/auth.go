@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"user/app/models"
+	"user/app/business"
 )
 
 func Auth(ctx *gin.Context) {
@@ -10,19 +10,10 @@ func Auth(ctx *gin.Context) {
 	if token == "" {
 		panic("登录信息失效，请重新登录~")
 	} else {
-		if !checkToken(token[7:]) {
+		if !business.CheckToken(token[7:]) {
 			panic("请先登录")
 		} else {
 			ctx.Next()
 		}
 	}
-}
-
-func checkToken(token string) bool {
-	user := models.GetTokenModel().GetUserByToken(token)
-	if user != nil {
-		models.AuthUser = user
-		return true
-	}
-	return false
 }

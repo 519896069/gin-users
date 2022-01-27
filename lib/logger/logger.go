@@ -1,4 +1,4 @@
-package lib
+package logger
 
 import (
 	"fmt"
@@ -57,5 +57,3 @@ func (l Log) Error(fields logrus.Fields) {
 func (l Log) Info(fields logrus.Fields) {
 	l.log(fields, "info")
 }
-
-
