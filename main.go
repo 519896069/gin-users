@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	bootstrap2 "user/fzp/bootstrap"
+	"user/fzp/bootstrap"
 )
 
 func main() {
@@ -12,11 +12,11 @@ func main() {
 	}
 	switch args[1] {
 	case "http":
-		bootstrap2.StartRpc()
-		bootstrap2.StartHttp()
+		bootstrap.StartRpc()
+		bootstrap.StartHttp()
 	case "rpc":
-		bootstrap2.StartRpc()
+		bootstrap.StartRpc()
 	default:
-		bootstrap2.Exec(args[1:])
+		bootstrap.Exec(args[1:])
 	}
 }
