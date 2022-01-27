@@ -78,7 +78,6 @@ func (t Token) LoginSuccess(user *User) string {
 	t.Token = token
 	t.Expired = expired
 	t.Db.Create(&t)
-
 	//把token加入缓存
 	json, err := json.Marshal(t)
 	if err == nil {
@@ -92,5 +91,5 @@ func (t Token) LoginSuccess(user *User) string {
 
 func (t *Token) setExpired() {
 	fzp.Runtime.Redis.Expired(t.Token, 0)
-	t.Db.Unscoped().Delete(&t)
+	t.Db.Unscoped().Delete(t)
 }

@@ -9,7 +9,7 @@ import (
 	"user/fzp/helper"
 )
 
-func Login(params params.Login) gin.H {
+func Login(ctx *gin.Context, params params.Login) gin.H {
 	user := models.GetUserModel()
 	query := user.Db.Table("users").Where("email=?", params.Email).First(&user)
 	if query.Error != nil {
@@ -32,7 +32,7 @@ func Login(params params.Login) gin.H {
 	}
 }
 
-func Register(params params.Register) gin.H {
+func Register(ctx *gin.Context, params params.Register) gin.H {
 	user := models.GetUserModel()
 	query := user.Db.Where("email=?", params.Email).First(&user)
 	if query.Error == nil {
@@ -62,20 +62,21 @@ func Register(params params.Register) gin.H {
 	}
 }
 
-func ChangePassword(params params.ChangePassword) {
+func ChangePassword(ctx *gin.Context, params params.ChangePassword) {
 	salt := helper.Uuid()
-	models.AuthUser.Salt = salt
-	models.AuthUser.Password = models.EncryptPassword(params.Password, salt)
-	tx := fzp.Runtime.Db.Updates(&models.AuthUser)
+	user := models.Auth(ctx)
+	user.Salt = salt
+	user.Password = models.EncryptPassword(params.Password, salt)
+	tx := fzp.Runtime.Db.Updates(user)
 	if tx.Error != nil {
 		panic(tx.Error.Error())
 	}
 }
 
-func CheckToken(token string) bool {
+func CheckToken(ctx *gin.Context, token string) bool {
 	user := models.GetTokenModel().GetUserByToken(token)
 	if user != nil {
-		models.AuthUser = user
+		ctx.Set("authUser", user)
 		return true
 	}
 	return false

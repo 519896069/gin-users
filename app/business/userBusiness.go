@@ -12,20 +12,22 @@ import (
 	"user/fzp/helper"
 )
 
-func UpdateUserInfo(params params.UserInfo) *models.User {
-	models.AuthUser.Username = params.Username
-	models.AuthUser.Email = params.Email
-	models.AuthUser.Mobile = params.Mobile
-	fzp.Runtime.Db.Updates(models.AuthUser)
-	return models.AuthUser
+func UpdateUserInfo(ctx *gin.Context, params params.UserInfo) *models.User {
+	user := models.Auth(ctx)
+	user.Username = params.Username
+	user.Email = params.Email
+	user.Mobile = params.Mobile
+	fzp.Runtime.Db.Updates(user)
+	return user
 }
 
 func UploadAvatar(ctx *gin.Context) string {
 	var (
 		rootPath, _ = os.Getwd()
 		date        = time.Now().Format("20060102")
-		userDir     = strconv.Itoa(int(models.AuthUser.ID % 100))
-		filename    = helper.Md5(strconv.Itoa(int(models.AuthUser.ID))) + ".png"
+		user        = models.Auth(ctx)
+		userDir     = strconv.Itoa(int(user.ID % 100))
+		filename    = helper.Md5(strconv.Itoa(int(user.ID))) + ".png"
 	)
 	var (
 		root         = rootPath + "/storage"
@@ -43,7 +45,7 @@ func UploadAvatar(ctx *gin.Context) string {
 	if uploadErr != nil {
 		panic(fmt.Sprintf("%v", uploadErr))
 	}
-	models.AuthUser.Avatar = completePath
-	fzp.Runtime.Db.Updates(models.AuthUser)
+	user.Avatar = completePath
+	fzp.Runtime.Db.Updates(user)
 	return completePath
 }

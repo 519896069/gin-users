@@ -2,14 +2,16 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"time"
 	"user/app/business"
 	"user/app/http/params"
-	"user/app/models"
 	"user/fzp/helper"
 )
 
 func Info(ctx *gin.Context) {
-	helper.Ok(ctx, models.AuthUser)
+	time.Sleep(5 * time.Second)
+	user, _ := ctx.Get("authUser")
+	helper.Ok(ctx, user)
 }
 
 // UpdateInfo 改个人信息
@@ -19,7 +21,7 @@ func UpdateInfo(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	helper.Ok(ctx, business.UpdateUserInfo(query))
+	helper.Ok(ctx, business.UpdateUserInfo(ctx, query))
 }
 
 // UploadAvatar 上传头像

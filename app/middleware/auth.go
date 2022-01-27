@@ -10,7 +10,7 @@ func Auth(ctx *gin.Context) {
 	if token == "" {
 		panic("登录信息失效，请重新登录~")
 	} else {
-		if !business.CheckToken(token[7:]) {
+		if !business.CheckToken(ctx, token[7:]) {
 			panic("请先登录")
 		} else {
 			ctx.Next()

@@ -13,7 +13,7 @@ func Login(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	helper.Ok(ctx, business.Login(query))
+	helper.Ok(ctx, business.Login(ctx, query))
 }
 
 func Register(ctx *gin.Context) {
@@ -22,7 +22,7 @@ func Register(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	helper.Ok(ctx, business.Register(query))
+	helper.Ok(ctx, business.Register(ctx, query))
 }
 
 // ChangePassword 修改密码
@@ -32,6 +32,6 @@ func ChangePassword(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	business.ChangePassword(query)
+	business.ChangePassword(ctx, query)
 	helper.Ok(ctx, nil)
 }

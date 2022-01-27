@@ -1,13 +1,10 @@
 package models
 
 import (
+	"github.com/gin-gonic/gin"
 	"time"
 	"user/fzp"
 	"user/fzp/helper"
-)
-
-var (
-	AuthUser *User
 )
 
 type User struct {
@@ -40,9 +37,20 @@ func (user *User) GetToken() (*Token, bool) {
 	if tx.Error == nil {
 		return nil, false
 	}
+	if token.ID == 0 {
+		return nil, false
+	}
 	return &token, true
 }
 
 func EncryptPassword(password string, salt string) string {
 	return helper.Md5(password + salt)
+}
+
+func Auth(ctx *gin.Context) *User {
+	user, ok := ctx.Get("authUser")
+	if !ok {
+		panic("请重新登录")
+	}
+	return user.(*User)
 }
