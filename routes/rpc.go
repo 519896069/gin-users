@@ -3,9 +3,9 @@ package routes
 import (
 	"google.golang.org/grpc"
 	"user/app/http/controllers/rpc"
-	"user/app/services"
+	"user/app/services/pb"
 )
 
 func RpcLoadRouter(sev *grpc.Server) {
-	services.RegisterUserServicesServer(sev, &rpc.UserServer{})
+	pb.RegisterUserServicesServer(sev, &rpc.UserServer{})
 }

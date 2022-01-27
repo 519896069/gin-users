@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package user;
 
-option go_package = "app/services";
+option go_package = "app/services/pb";
 
 service UserServices {
   //用token获取用户 - 用户鉴权
