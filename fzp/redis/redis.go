@@ -8,18 +8,14 @@ import (
 	appConfig "user/config"
 )
 
-var (
-	Redis *RedisConnect
-)
-
 type RedisConnect struct {
 	Pool *redis.Pool
 }
 
-func init() {
+func InitRedis() *RedisConnect {
 	config := appConfig.CONFIG.Redis
-	Redis = &RedisConnect{
-		&redis.Pool{
+	return &RedisConnect{
+		Pool: &redis.Pool{
 			MaxIdle:     config.MaxIdle, //最大空闲连接数
 			MaxActive:   config.Active,  //最大连接数
 			IdleTimeout: time.Duration(config.IdleTimeout) * time.Second,

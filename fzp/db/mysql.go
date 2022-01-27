@@ -1,4 +1,4 @@
-package mysql
+package db
 
 import (
 	"fmt"
@@ -8,13 +8,7 @@ import (
 	appConfig "user/config"
 )
 
-var Mysql *MysqlConnect
-
-type MysqlConnect struct {
-	Db *gorm.DB
-}
-
-func init() {
+func InitDb() *gorm.DB {
 	database := appConfig.CONFIG.Database
 	//加载mysql
 	dsn := fmt.Sprintf(
@@ -37,7 +31,5 @@ func init() {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
 	//db.AutoMigrate(&models.User{}, &models.Token{})
-	Mysql = &MysqlConnect{
-		db,
-	}
+	return db
 }

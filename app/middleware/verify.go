@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"user/lib"
+	"user/fzp/helper"
 )
 
 func Verify(ctx *gin.Context) {
@@ -23,5 +23,5 @@ func getApiSign(params map[string]string) string {
 	for key, value := range params {
 		signStr += key + "=" + value
 	}
-	return lib.Md5(signStr)
+	return helper.Md5(signStr)
 }

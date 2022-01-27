@@ -1,4 +1,4 @@
-package lib
+package helper
 
 import (
 	"crypto/md5"
@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 	"time"
-	"user/lib/redis"
+	"user/fzp"
 )
 
 func Uuid() string {
@@ -21,7 +21,7 @@ func Uuid() string {
 
 func getId() int64 {
 	//获取redis连接
-	client := redis.Redis.Pool.Get()
+	client := fzp.Runtime.Redis.Pool.Get()
 	defer client.Close()
 	//判断是否存在不存在则设置初始化1秒过期
 	exists, _ := redis2.Bool(client.Do("exists", "uid_count"))

@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
-	"user/lib/logger"
+	"user/fzp/logger"
 )
 
 type WriterInterceptor struct {

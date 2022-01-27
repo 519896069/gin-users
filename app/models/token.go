@@ -4,9 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-	"user/lib"
-	"user/lib/mysql"
-	"user/lib/redis"
+	"user/fzp"
+	"user/fzp/helper"
 )
 
 type Token struct {
@@ -17,13 +16,13 @@ type Token struct {
 }
 
 //func init() {
-//lib.Mysql.Db.AutoMigrate(&Token{})
+//fzp.Mysql.Db.AutoMigrate(&Token{})
 //}
 
 func GetTokenModel() *Token {
 	return &Token{
 		Model: Model{
-			Db: mysql.Mysql.Db,
+			Db: fzp.Runtime.Db,
 		},
 	}
 }
@@ -34,7 +33,7 @@ func (t Token) GetUserByToken(tokenStr string) *User {
 		cache = true
 	)
 	//先从缓存中获取UID
-	_, ok := redis.Redis.Get(tokenStr, &t)
+	_, ok := fzp.Runtime.Redis.Get(tokenStr, &t)
 	if !ok {
 		cache = false
 	}
@@ -64,7 +63,7 @@ func (t Token) GetUserByToken(tokenStr string) *User {
 
 func (t Token) LoginSuccess(user *User) string {
 	var (
-		token   = lib.Md5(lib.Uuid())
+		token   = helper.Md5(helper.Uuid())
 		expired = time.Now().Add(3600 * 30 * 6 * time.Second)
 	)
 	//设置用户最后登录时间
@@ -83,7 +82,7 @@ func (t Token) LoginSuccess(user *User) string {
 	//把token加入缓存
 	json, err := json.Marshal(t)
 	if err == nil {
-		redis.Redis.Set(token, string(json), 3600*30*6)
+		fzp.Runtime.Redis.Set(token, string(json), 3600*30*6)
 	} else {
 		panic(fmt.Sprintf("%.v", err))
 	}
@@ -92,6 +91,6 @@ func (t Token) LoginSuccess(user *User) string {
 }
 
 func (t *Token) setExpired() {
-	redis.Redis.Expired(t.Token, 0)
+	fzp.Runtime.Redis.Expired(t.Token, 0)
 	t.Db.Unscoped().Delete(&t)
 }

@@ -5,11 +5,11 @@ import (
 	"user/app/business"
 	"user/app/http/params"
 	"user/app/models"
-	"user/lib"
+	"user/fzp/helper"
 )
 
 func Info(ctx *gin.Context) {
-	lib.Ok(ctx, models.AuthUser)
+	helper.Ok(ctx, models.AuthUser)
 }
 
 // UpdateInfo 改个人信息
@@ -19,10 +19,10 @@ func UpdateInfo(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	lib.Ok(ctx, business.UpdateUserInfo(query))
+	helper.Ok(ctx, business.UpdateUserInfo(query))
 }
 
 // UploadAvatar 上传头像
 func UploadAvatar(ctx *gin.Context) {
-	lib.Ok(ctx, business.UploadAvatar(ctx))
+	helper.Ok(ctx, business.UploadAvatar(ctx))
 }

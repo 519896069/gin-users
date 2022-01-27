@@ -1,4 +1,4 @@
-package kernel
+package bootstrap
 
 import (
 	"user/app/commands"

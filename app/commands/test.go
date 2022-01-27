@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-	"user/lib/redis"
+	"user/fzp"
 )
 
 type test struct {
@@ -22,7 +22,7 @@ func testList(index int) {
 	}
 	t.D = append(t.D, index)
 	marshal, _ := json.Marshal(t)
-	redis.Redis.Lpush("tlist", string(marshal))
+	fzp.Runtime.Redis.Lpush("tlist", string(marshal))
 	t = test{}
 	fmt.Printf("push:%d\n", index)
 }
@@ -34,8 +34,8 @@ func Test(args ...string) {
 		D:  []int{1, 2, 3},
 	}
 	marshal, _ := json.Marshal(t)
-	redis.Redis.Lpush("tlist", string(marshal))
+	fzp.Runtime.Redis.Lpush("tlist", string(marshal))
 	t = test{}
-	redis.Redis.Rpop("tlist", &t)
+	fzp.Runtime.Redis.Rpop("tlist", &t)
 	fmt.Println(t)
 }

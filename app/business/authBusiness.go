@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"user/app/http/params"
 	"user/app/models"
-	"user/lib"
-	"user/lib/mysql"
+	"user/fzp"
+	"user/fzp/helper"
 )
 
 func Login(params params.Login) gin.H {
@@ -40,7 +40,7 @@ func Register(params params.Register) gin.H {
 	}
 	//验证
 	//验证成功
-	salt := lib.Md5(lib.Uuid())
+	salt := helper.Md5(helper.Uuid())
 	user.Username = params.Username
 	user.Email = params.Email
 	user.Password = models.EncryptPassword(params.Password, salt)
@@ -63,10 +63,10 @@ func Register(params params.Register) gin.H {
 }
 
 func ChangePassword(params params.ChangePassword) {
-	salt := lib.Uuid()
+	salt := helper.Uuid()
 	models.AuthUser.Salt = salt
 	models.AuthUser.Password = models.EncryptPassword(params.Password, salt)
-	tx := mysql.Mysql.Db.Updates(&models.AuthUser)
+	tx := fzp.Runtime.Db.Updates(&models.AuthUser)
 	if tx.Error != nil {
 		panic(tx.Error.Error())
 	}

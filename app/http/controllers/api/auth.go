@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"user/app/business"
 	"user/app/http/params"
-	"user/lib"
+	"user/fzp/helper"
 )
 
 func Login(ctx *gin.Context) {
@@ -13,7 +13,7 @@ func Login(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	lib.Ok(ctx, business.Login(query))
+	helper.Ok(ctx, business.Login(query))
 }
 
 func Register(ctx *gin.Context) {
@@ -22,7 +22,7 @@ func Register(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	lib.Ok(ctx, business.Register(query))
+	helper.Ok(ctx, business.Register(query))
 }
 
 // ChangePassword 修改密码
@@ -33,5 +33,5 @@ func ChangePassword(ctx *gin.Context) {
 		panic(err)
 	}
 	business.ChangePassword(query)
-	lib.Ok(ctx, nil)
+	helper.Ok(ctx, nil)
 }

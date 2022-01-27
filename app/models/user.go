@@ -2,8 +2,8 @@ package models
 
 import (
 	"time"
-	"user/lib"
-	"user/lib/mysql"
+	"user/fzp"
+	"user/fzp/helper"
 )
 
 var (
@@ -25,7 +25,7 @@ type User struct {
 func GetUserModel() *User {
 	return &User{
 		Model: Model{
-			Db: mysql.Mysql.Db,
+			Db: fzp.Runtime.Db,
 		},
 	}
 }
@@ -36,7 +36,7 @@ func (user *User) CheckPassword(password string) bool {
 
 func (user *User) GetToken() (*Token, bool) {
 	var token Token
-	tx := mysql.Mysql.Db.Where("uid=?", user.ID).Where("expired>?", time.Now()).First(&token)
+	tx := fzp.Runtime.Db.Where("uid=?", user.ID).Where("expired>?", time.Now()).First(&token)
 	if tx.Error == nil {
 		return nil, false
 	}
@@ -44,5 +44,5 @@ func (user *User) GetToken() (*Token, bool) {
 }
 
 func EncryptPassword(password string, salt string) string {
-	return lib.Md5(password + salt)
+	return helper.Md5(password + salt)
 }
