@@ -4,9 +4,8 @@ go 1.12
 
 require (
 	github.com/garyburd/redigo v1.6.2
-	github.com/ghodss/yaml v1.0.0 // indirect
+	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.7.4
-	github.com/go-ini/ini v1.63.2
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
