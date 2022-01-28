@@ -8,7 +8,7 @@ import (
 )
 
 func GetUserByToken(token string) *pb.User {
-	conn, err := rpc.GetClient()
+	conn, err := rpc.GetConn()
 	if err != nil {
 		return &pb.User{}
 	}
