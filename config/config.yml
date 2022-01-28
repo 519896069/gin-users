@@ -1,0 +1,18 @@
+setting:
+  app:
+    name: user
+    key: +_)(*user
+  database:
+    host: 127.0.0.1
+    port: 3306
+    database: user
+    username: root
+    password: qwer.1234
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    maxidle: 10
+    active: 50
+    timeout: 300
+    password:
+    database: 1

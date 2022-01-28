@@ -13,7 +13,7 @@ type RedisConnect struct {
 }
 
 func InitRedis() *RedisConnect {
-	config := appConfig.CONFIG.Redis
+	config := appConfig.CONFIG.Setting.Redis
 	return &RedisConnect{
 		Pool: &redis.Pool{
 			MaxIdle:     config.MaxIdle, //最大空闲连接数

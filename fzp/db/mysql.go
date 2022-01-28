@@ -5,11 +5,11 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"time"
-	appConfig "user/config"
+	"user/config"
 )
 
 func InitDb() *gorm.DB {
-	database := appConfig.CONFIG.Database
+	database := config.CONFIG.Setting.Database
 	//加载mysql
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
