@@ -1,12 +1,14 @@
 package routes
 
 import (
+	"github.com/DeanThompson/ginpprof"
 	"github.com/gin-gonic/gin"
 	"user/app/http/controllers/api"
 	"user/app/middleware"
 )
 
 func New(engine *gin.Engine) {
+	ginpprof.Wrap(engine)
 	engine.Use(middleware.Logger)
 	engine.Use(middleware.Error)
 	auth := engine.Group("auth")
